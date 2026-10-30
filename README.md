@@ -1,36 +1,131 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Esther of Kish
+
+E-commerce storefront for Esther of Kish, a handcrafted bead jewellery brand. The shop sells necklaces, bracelets, earrings, rings and sets for both women and men.
+
+---
+
+## Project Structure
+
+```
+esther-of-kish/
+├── frontend/          # Next.js storefront
+│   ├── src/
+│   │   ├── app/               # App Router pages & global styles
+│   │   │   ├── page.js        # Home page
+│   │   │   ├── layout.js      # Root layout (fonts, header)
+│   │   │   ├── globals.css
+│   │   │   └── shop/
+│   │   │       ├── page.js    # Shop landing
+│   │   │       ├── women/page.js
+│   │   │       └── men/page.js
+│   │   ├── components/
+│   │   │   ├── layout/site-header/
+│   │   │   ├── sections/home/ # BeadHero, FeaturedStack
+│   │   │   └── shop/          # ProductCard, ProductModal, ShopCatalog
+│   │   └── lib/
+│   │       ├── products.js    # Full product catalog & helpers
+│   │       ├── cart.js        # Cart state
+│   │       └── intro-events.js
+│   ├── public/                # Static assets (SVG beads, product images)
+│   ├── next.config.mjs
+│   └── package.json
+├── backend/           # Express API
+│   ├── src/index.js
+│   └── package.json
+└── README.md
+```
+
+---
+
+## Tech Stack
+
+| Layer    | Technology                              |
+| -------- | --------------------------------------- |
+| Frontend | Next.js 16.4.3, React 19, Tailwind v4  |
+| Fonts    | Geist Sans, Geist Mono, Playfair Display (via `next/font`) |
+| Animation | GSAP 3                                 |
+| Backend  | Node.js, Express 4                      |
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm
+
+### Frontend
 
 ```bash
+cd frontend
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Runs on [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Backend
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+cd backend
+npm install
+npm run dev
+```
 
-## Learn More
+Runs on [http://localhost:5000](http://localhost:5000)
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Product Catalog
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The full catalog lives in `frontend/src/lib/products.js`. It covers:
 
-## Deploy on Vercel
+- **Women:** necklaces, bracelets, earrings, rings, sets
+- **Men:** necklaces, bracelets, earrings, rings, sets
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Each product has a slug, SKU, price (₦), colour options, size options with a size guide, bead specs, a story, and care instructions.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> **Before launch:** confirm all prices, materials and sizes with Esther. Product copy and specs in `products.js` are placeholder drafts.
+
+### Adding products
+
+1. Drop product images into the relevant folder under `public/` (e.g. `public/necklaces/`).
+2. Add a new `make({...})` entry in the appropriate section of `PRODUCTS` in `products.js`.
+3. Update the `images` array on the entry to reference your new image paths.
+
+### Currency
+
+The currency symbol is set in one place at the top of `products.js`:
+
+```js
+export const CURRENCY = "₦"; // change to "$" etc.
+```
+
+---
+
+## Deployment
+
+The frontend is configured for deployment on Vercel. A `vercel.json` at the repo root points Vercel at the `frontend/` subdirectory.
+
+```bash
+# From the repo root, or connect the repo on vercel.com
+vercel
+```
+
+Alternatively, set the **Root Directory** to `frontend` in the Vercel project settings and remove the custom `buildCommand` from `vercel.json`.
+
+The backend is a plain Express server and can be deployed to any Node.js host (Railway, Render, Fly.io, etc.).
+
+---
+
+## Environment Variables
+
+Neither service ships with a `.env` file. Create one in each directory as needed:
+
+```
+frontend/.env.local
+backend/.env
+```
+
+Both `.gitignore` files exclude all `.env*` files.
